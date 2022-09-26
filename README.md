@@ -1,2 +1,2 @@
 # Codo-a-Codo-Inicial
-Codo A Codo Inicial - Ejercicios
+Mis ejercicio del curso "Codo A Codo Inicial"
