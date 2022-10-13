@@ -2,8 +2,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 // Ejecricio en clase sobre array (3ra clase sobre arrays)
 
-// Con el Scanner hay un probelma que se saltea la primera lectura
+// Con el Scanner hay un problema que se saltea la primera lectura
 // despues del primer ciclo, la solucion es usar 2 Scanners
+
+// https://stackoverflow.com/questions/50845958/scanner-gets-skipped/50869232#50869232
 
 class ListaDeTareas {
     public static void main(String[] args){
