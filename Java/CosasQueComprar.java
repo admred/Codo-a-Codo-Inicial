@@ -26,7 +26,7 @@ class CosasQueComprar {
 
         do{
             System.out.println("Buscador de producto");
-            producto=leer.next();
+            producto=leer.nextLine();
             if(cosas.indexOf(producto) != -1){
                 System.out.println("Si, tenés que comprar el producto");
             }
