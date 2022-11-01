@@ -1,9 +1,49 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 // Ejercicio en clase sobre funciones (parte 3)
+// Segunda parte de este ejercicio con Persistencia
 
-class ListaDeCompras {
+class ListadoDeCompras {
+
+    public static void leerArchivo(ArrayList<String> lista) {
+        String ruta="listaCompras1.txt";
+        File archivo = new File(ruta);
+        Scanner leer=null;
+
+        try{
+            leer=new Scanner(archivo);
+
+            while(leer.hasNextLine()){
+                lista.add( leer.nextLine() );
+                //System.out.println(linea);
+            }
+            leer.close();
+
+        }catch(Exception ex){
+            //ex.printStackTrace();
+            //System.err.println("Excepcion : "+ex.getMessage());
+        }
+    }
+
+    public static void escribirArchivo(ArrayList<String> lista) {
+        FileWriter archivo =null;
+        String ruta="listaCompras1.txt";
+
+        try{
+            archivo = new FileWriter(ruta);
+
+            for(String item: lista){
+                archivo.write(item+"\n");
+            }
+            archivo.close();
+        }catch(Exception ex){
+            ex.printStackTrace();
+            System.err.println("Excepcion : "+ex.getMessage());
+        }
+    }
 
     public static void agregar(ArrayList<String> listado){
         Scanner leer=new Scanner(System.in);
@@ -21,7 +61,7 @@ class ListaDeCompras {
         String itemBuscado=buscarItem( listado, leer.nextLine() );
         if(itemBuscado != null) {
             listado.remove( itemBuscado );
-            agregar(listado);
+
         } else {
             System.out.println("El item no esta en la listado");
         }
@@ -61,7 +101,7 @@ class ListaDeCompras {
         System.out.flush();
 
         System.out.println(" 1 - Agregar | 2 - Elimnar | 3 - Modificar | 4  - Ver Lista | 5 - Salir");
-
+        leerArchivo(listado);
         do{
             System.out.printf("\nOpcion:");
             opcion=leer.next().charAt(0);
@@ -87,6 +127,8 @@ class ListaDeCompras {
                 }
         }while(opcion != '5');
 
+
+        escribirArchivo(listado);
         System.out.println("Fin del programa");
     }
 }
