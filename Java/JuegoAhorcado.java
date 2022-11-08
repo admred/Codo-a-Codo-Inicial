@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
+import java.io.File;
 
 // Ejercicio propuesto por el profe
 
@@ -11,8 +12,30 @@ import java.util.Random;
 // un contador de errores, cuando mas errores mas"ahorcado"
 // esta. Finalmente pierde o gana si completa la palabra
 
+// Ejercicio modificado con persistencia de datos
+
 
 class JuegoAhorcado {
+
+    public static void leerArchivo(ArrayList<String> lista) {
+        String ruta="palabras.txt";
+        File archivo = new File(ruta);
+        Scanner leer=null;
+
+        try{
+            leer=new Scanner(archivo);
+
+            while(leer.hasNextLine()){
+                lista.add( leer.nextLine() );
+                //System.out.println(linea);
+            }
+            leer.close();
+
+        }catch(Exception ex){
+            //ex.printStackTrace();
+            System.err.println("Error no se puede leer archivo "+ruta);
+        }
+    }
 
     public static void dibujarBase(){
         System.out.println("");
@@ -92,6 +115,7 @@ class JuegoAhorcado {
         int encontradoContador=0;
         boolean gameover=false;
         Scanner leer=new Scanner(System.in);
+        /*
         String[] palabras = {
             "Programacion",
             "Java",
@@ -103,14 +127,23 @@ class JuegoAhorcado {
             "Calor",
             "Supercalifragilisticoespialidoso"
             };
+        */
+
+        ArrayList<String> palabras=new ArrayList<String>();
+        leerArchivo(palabras);
+
 
         // elegimos una palabra aleatoria
-        String palabra=palabras[ new Random().nextInt(palabras.length) ] ;
+        String palabra=palabras.get( new Random().nextInt(palabras.size()) ) ;
 
         palabra=palabra.toUpperCase();
 
         char[] secreto=palabra.toCharArray();
         char[] adivinadas=palabra.replaceAll(".","_").toCharArray();
+
+        System.out.println("JUEGO DEL AHORACADO");
+        System.out.println("Son "+secreto.length+" letras");
+        System.out.println("");
 
         // loop principal del juego
         do{
