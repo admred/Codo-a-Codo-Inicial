@@ -14,10 +14,12 @@ import java.io.File;
 
 // Ejercicio modificado con persistencia de datos
 
+// Funcionalidad Arriesgar agregarda
+
 
 class JuegoAhorcado {
 
-    public static void leerArchivo(ArrayList<String> lista) {
+    static void leerArchivo(ArrayList<String> lista) {
         String ruta="palabras.txt";
         File archivo = new File(ruta);
         Scanner leer=null;
@@ -27,17 +29,14 @@ class JuegoAhorcado {
 
             while(leer.hasNextLine()){
                 lista.add( leer.nextLine() );
-                //System.out.println(linea);
             }
             leer.close();
-
         }catch(Exception ex){
-            //ex.printStackTrace();
             System.err.println("Error no se puede leer archivo "+ruta);
         }
     }
 
-    public static void dibujarBase(){
+    static void dibujarBase(){
         System.out.println("");
         System.out.println("");
         System.out.println("");
@@ -47,7 +46,7 @@ class JuegoAhorcado {
         System.out.println("");
         System.out.println("--------------");
     }
-    public static void dibujarMastil(){
+    static void dibujarMastil(){
         System.out.println("");
         System.out.println("       |");
         System.out.println("       |");
@@ -57,7 +56,7 @@ class JuegoAhorcado {
         System.out.println("       |");
         System.out.println("-------+------");
     }
-    public static void dibujarViga(){
+    static void dibujarViga(){
         System.out.println("   +---+");
         System.out.println("       |");
         System.out.println("       |");
@@ -67,27 +66,27 @@ class JuegoAhorcado {
         System.out.println("       |");
         System.out.println("-------+------");
     }
-    public static void dibujarCabeza(){
-        System.out.println("   +---+");
-        System.out.println("   |   |");
-        System.out.println("  ( )  |");
-        System.out.println("       |");
-        System.out.println("       |");
-        System.out.println("       |");
-        System.out.println("       |");
-        System.out.println("-------+------");
-    }
-    public static void dibujarTorso(){
+    static void dibujarCabeza(){
         System.out.println("   +---+");
         System.out.println("   |   |");
         System.out.println("  ( )  |");
+        System.out.println("       |");
+        System.out.println("       |");
+        System.out.println("       |");
+        System.out.println("       |");
+        System.out.println("-------+------");
+    }
+    static void dibujarTorso(){
+        System.out.println("   +---+");
+        System.out.println("   |   |");
+        System.out.println("  ( )  |");
         System.out.println("   |   |");
         System.out.println("   |   |");
         System.out.println("       |");
         System.out.println("       |");
         System.out.println("-------+------");
     }
-    public static void dibujarBrazos(){
+    static void dibujarBrazos(){
         System.out.println("   +---+");
         System.out.println("   |   |");
         System.out.println("  ( )  |");
@@ -97,7 +96,7 @@ class JuegoAhorcado {
         System.out.println("       |");
         System.out.println("-------+------");
     }
-    public static void dibujarPiernas(){
+    static void dibujarPiernas(){
         System.out.println("   +---+");
         System.out.println("   |   |");
         System.out.println("  ( )  |");
@@ -108,26 +107,44 @@ class JuegoAhorcado {
         System.out.println("-------+------");
     }
 
+    static void dibujarAhorcado(int intentos){
+        switch(intentos){
+            case 1:
+                dibujarBase();
+                break;
+            case 2:
+                dibujarMastil();
+                break;
+            case 3:
+                dibujarViga();
+                break;
+            case 4:
+                dibujarCabeza();
+                break;
+            case 5:
+                dibujarBrazos();
+                break;
+            case 6:
+                dibujarPiernas();
+                break;
+        }
+    }
+
+    static boolean arriesgar(String secreto){
+        Scanner leer=new Scanner(System.in);
+        System.out.print("Arriesgar Palabra : ");
+        String palabra=leer.nextLine().toUpperCase();
+        return palabra.equals(secreto);
+    }
+
     public static void main(String[] args) {
-        int error=0;
+
         char letra;
+        int i=0;
         boolean encontrado=false;
-        int encontradoContador=0;
+        int intentos=0;
         boolean gameover=false;
         Scanner leer=new Scanner(System.in);
-        /*
-        String[] palabras = {
-            "Programacion",
-            "Java",
-            "Ejercicio",
-            "Ahorcado",
-            "Codo",
-            "Argentina",
-            "Octubre",
-            "Calor",
-            "Supercalifragilisticoespialidoso"
-            };
-        */
 
         ArrayList<String> palabras=new ArrayList<String>();
         leerArchivo(palabras);
@@ -141,63 +158,52 @@ class JuegoAhorcado {
         char[] secreto=palabra.toCharArray();
         char[] adivinadas=palabra.replaceAll(".","_").toCharArray();
 
-        System.out.println("JUEGO DEL AHORACADO");
-        System.out.println("Son "+secreto.length+" letras");
-        System.out.println("");
+        System.out.println("1 - Arriesgar | 2 - Salir");
 
+
+
+        //System.out.println("");
         // loop principal del juego
+
         do{
-            System.out.println(adivinadas);
+            dibujarAhorcado(intentos);
+            System.out.println("Son "+adivinadas.length+" letras : "+String.valueOf(adivinadas));
+            System.out.print("Opcion/Letra : ");
+            letra = leer.nextLine().charAt(0);
 
-            letra=leer.nextLine().charAt(0);
-            letra=Character.toUpperCase(letra);
-
-            // aca buscamos la letra recorriendo el arreglo secreto
-            for(int i=0;i<secreto.length;i++){
-                if(secreto[i] == letra){
-                    adivinadas[i]=letra;
-                    secreto[i]='-'; // elimnamos para no volver repetir
-                    encontrado=true;
-                    encontradoContador++;
+            if ( letra == '1' ){
+                if( arriesgar(palabra)){
+                    adivinadas=secreto;
+                    break;
+                } else {
+                    System.out.println("Incorrecto");
+                    intentos++;
+                    continue;
                 }
-            }
-            if( !encontrado ){
-                error++;
-            }
-            encontrado=false; // reset a esta variable
-
-            // Aca detectamos cuando se gano,
-            if(encontradoContador == secreto.length){
-                break; // romper ciclo do-white
-            }
-
-            // este switch se encarga de hacer el dibujito
-            // podria meter esto en un dibujarAhorado(error);
-            switch(error){
-                case 1:
-                    dibujarBase();
-                    break;
-                case 2:
-                    dibujarMastil();
-                    break;
-                case 3:
-                    dibujarViga();
-                    break;
-                case 4:
-                    dibujarCabeza();
-                    break;
-                case 5:
-                    dibujarBrazos();
-                    break;
-                case 6:
-                    dibujarPiernas();
-                    gameover=true;
-                    break;
+            } else if ( letra == '2' ) {
+                return;
+            } else if ( ! Character.isDigit(letra)) {
+                letra = Character.toUpperCase(letra);
+                // aca buscamos la letra recorriendo el arreglo secreto
+                for(i=0; i<secreto.length; i++){
+                    if( letra == adivinadas[i] ) {
+                        System.out.println("Ya estaba adivinada. No pasa nada.");
+                        break;
+                    }
+                    if(secreto[i] == letra) {
+                        adivinadas[i] = letra;
+                        secreto[i] = '-'; // elimnamos para no volver repetir
+                    }
+                }
+                if(i==secreto.length){
+                    intentos++;
+                }
+                //dibujarAhorcado(intentos);
             }
 
-        }while(!gameover);
+        }while(intentos < 6);
 
-        if(!gameover) {
+        if(intentos < 6 ) {
             System.out.println("GANASTE ! "+palabra);
         } else {
             System.out.println("PERDISTE ! La palabra era "+palabra);
