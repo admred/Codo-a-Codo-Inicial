@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 
-class CalculadoraGrafica implements ActionListener  {
+class CalculadoraGrafica  {
     static JFrame window;
     static JLabel operation;
     //static JButton button;
@@ -27,21 +27,28 @@ class CalculadoraGrafica implements ActionListener  {
         button.setOpaque(true);
         button.setBackground(Color.DARK_GRAY);
         button.setForeground(Color.WHITE);
+        button.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent event){
+                JButton btn=(JButton)event.getSource();
+                String text=btn.getText();
+                operation.setText(text);
+                System.out.println( text );
+            }
+        });
+
+
         window.add(button);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent event){
-
     }
 
     public static void main(String[] args) {
         window=new JFrame();
 
         window.setTitle("Calculadora");
-        window.setLocationRelativeTo(null);
+
         window.setSize(275,485);
         window.setResizable(false);
+
         window.getContentPane().setBackground(Color.BLACK);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLayout(null);
@@ -85,7 +92,7 @@ class CalculadoraGrafica implements ActionListener  {
         crearBoton(".",145,380);
         crearBoton("=",210,380);
 
-
+        window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
 }
