@@ -1,4 +1,7 @@
 // Ejercicio en clase, Calculadora con Swing
+
+// Segunda parte , eventos
+
 import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -15,38 +18,24 @@ import javax.swing.border.LineBorder;
 
 
 class CalculadoraGrafica  {
-    static JFrame window;
-    static JLabel operation;
-    //static JButton button;
-    static JLabel display;
+    private JFrame window;
+    private JLabel operation;
+    private JLabel display;
 
-    private static void crearBoton(String text, int x , int y){
-        // botones
-        JButton button=new JButton(text);
-        button.setBounds(x,y,50,50);
-        button.setOpaque(true);
-        button.setBackground(Color.DARK_GRAY);
-        button.setForeground(Color.WHITE);
-        button.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent event){
-                JButton btn=(JButton)event.getSource();
-                String text=btn.getText();
-                operation.setText(text);
-                System.out.println( text );
-            }
-        });
+    private double operand1=0;
+    private double operand2=0;
+    private String operator="";
+    private double result=0;
 
+    private boolean newOperand=true;
+    private boolean decimalDot=false;
 
-        window.add(button);
-    }
-
-    public static void main(String[] args) {
+    public CalculadoraGrafica(){
         window=new JFrame();
 
         window.setTitle("Calculadora");
 
-        window.setSize(275,485);
+        window.setSize(290,485);
         window.setResizable(false);
 
         window.getContentPane().setBackground(Color.BLACK);
@@ -54,7 +43,7 @@ class CalculadoraGrafica  {
         window.setLayout(null);
 
         // operaciones
-        operation=new JLabel("6 * 9 = ");
+        operation=new JLabel("");
         operation.setBounds(15,10,245,30);
         operation.setBorder(new LineBorder(Color.DARK_GRAY));
         operation.setForeground(Color.WHITE);
@@ -94,5 +83,88 @@ class CalculadoraGrafica  {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+    }
+
+    public void crearBoton(String text, int x , int y){
+        // botones
+        JButton button=new JButton(text);
+        button.setBounds(x,y,50,50);
+        button.setFocusPainted(false);
+        button.setOpaque(true);
+        if(text.equals("=") ){
+            button.setBackground(Color.GREEN);
+        } else {
+            button.setBackground(Color.DARK_GRAY);
+        }
+        button.setForeground(Color.WHITE);
+        button.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent event){
+
+                switch(text){
+                    case "0":
+                    case "1":
+                    case "2":
+                    case "3":
+                    case "4":
+                    case "5":
+                    case "6":
+                    case "7":
+                    case "9":
+                        if(newOperand == true){
+                            if(!text.equals("0")){
+                                display.setText(text);
+                                newOperand=false;
+                            }
+                        } else {
+                            display.setText(display.getText()+text);
+                        }
+                        break;
+                    case ".":
+                        if(decimalDot == false) {
+                            display.setText(display.getText()+text);
+                            decimalDot=true;
+                            newOperand=false;
+                        }
+                        break;
+
+                    case "+":
+                    case "-":
+                    case "*":
+                    case "/":
+                        if(operator.equals("") ) {
+                            operator=text;
+                            operand1=Double.parseDouble(display.getText());
+                            operation.setText(operand1+" "+operator);
+                            newOperand=true;
+                            decimalDot=false;
+                        } else {
+                            operator=text;
+
+                            ///operand1 = getResult();  // PROXIMA CLASE
+                            operation.setText(operand1+" "+operator);
+                        }
+                        break;
+                    case "c":
+                        // reset
+                        display.setText("0");
+                        operation.setText("");
+                        decimalDot=false;
+                        newOperand=false;
+                        operand1=0;
+                        operand2=0;
+                        operator="";
+                        break;
+                    }
+
+
+
+        }});
+        window.add(button);
+    }
+
+    public static void main(String[] args ) {
+        new CalculadoraGrafica();
+
     }
 }
