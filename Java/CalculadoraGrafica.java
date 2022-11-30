@@ -1,6 +1,8 @@
 // Ejercicio en clase, Calculadora con Swing
 
 // Segunda parte , eventos
+import java.text.DecimalFormatSymbols;
+import java.text.DecimalFormat;
 
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -135,32 +137,68 @@ class CalculadoraGrafica  {
                         if(operator.equals("") ) {
                             operator=text;
                             operand1=Double.parseDouble(display.getText());
-                            operation.setText(operand1+" "+operator);
                             newOperand=true;
                             decimalDot=false;
+                            //operation.setText(getFormatedDecimal(operand1)+" "+operator);
                         } else {
-                            operator=text;
 
-                            ///operand1 = getResult();  // PROXIMA CLASE
-                            operation.setText(operand1+" "+operator);
+                            operand1=getResult();
+                            operator=text;
                         }
+                        operation.setText(getFormatedDecimal(operand1));
                         break;
                     case "c":
                         // reset
                         display.setText("0");
                         operation.setText("");
-                        decimalDot=false;
-                        newOperand=false;
-                        operand1=0;
-                        operand2=0;
-                        operator="";
+                        resetVars();
                         break;
+                    case "=":
+                        result=getResult();
+                        resetVars();
                     }
-
-
-
         }});
         window.add(button);
+    }
+
+    private void resetVars() {
+        decimalDot=false;
+        newOperand=true;
+        operand1=0;
+        operand2=0;
+        operator="";
+    };
+
+    private double getResult() {
+        operand2=Double.parseDouble(display.getText());
+        switch(operator){
+            case "+":
+                result=operand1+operand2;
+                break;
+            case "-":
+                result=operand1-operand2;
+                break;
+            case "*":
+                result=operand1*operand2;
+                break;
+            case "/":
+                result=operand1/operand2;
+                break;
+            }
+            operation.setText(operand1+" "+operator+" "+operand2+" =");
+            display.setText(getFormatedDecimal(result));
+            resetVars();
+            decimalDot=true;
+            return result;
+        }
+
+    private String getFormatedDecimal(double decimal){
+        String valueDisplay="";
+        DecimalFormatSymbols separator=new DecimalFormatSymbols();
+        separator.setDecimalSeparator('.');
+        DecimalFormat format=new DecimalFormat("#.###########");
+        valueDisplay= String.valueOf(format.format(decimal));
+        return valueDisplay;
     }
 
     public static void main(String[] args ) {
