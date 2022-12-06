@@ -61,6 +61,8 @@ class CalculadoraGrafica  {
         window.add(display);
 
         // botones
+        crearBoton("\u221a",15,120); // sqrt
+        crearBoton("\u2190",80,120); // <-
         crearBoton("c",145,120);
         crearBoton("/",210,120);
 
@@ -111,6 +113,7 @@ class CalculadoraGrafica  {
                     case "4":
                     case "5":
                     case "6":
+                    case "8":
                     case "7":
                     case "9":
                         if(newOperand == true){
@@ -125,27 +128,38 @@ class CalculadoraGrafica  {
                     case ".":
                         if(decimalDot == false) {
                             display.setText(display.getText()+text);
-                            decimalDot=true;
-                            newOperand=false;
+                        } else {
+
+                            display.setText("0"+text);
                         }
+                        decimalDot=true;
+                        newOperand=false;
                         break;
 
                     case "+":
                     case "-":
                     case "*":
                     case "/":
+
                         if(operator.equals("") ) {
                             operator=text;
                             operand1=Double.parseDouble(display.getText());
                             newOperand=true;
-                            decimalDot=false;
-                            //operation.setText(getFormatedDecimal(operand1)+" "+operator);
+                            operation.setText(getFormatedDecimal(operand1)+" "+operator);
                         } else {
-
                             operand1=getResult();
                             operator=text;
                         }
-                        operation.setText(getFormatedDecimal(operand1));
+                        decimalDot=false;
+                        //operation.setText(getFormatedDecimal(operand1)+" "+operator);
+                        break;
+
+                    case "\u221a":
+                        if(operand2>=0){
+                            operand1=getResult();
+                            operation.setText(operator+"("+getFormatedDecimal(operand1)+")");
+                        }
+
                         break;
                     case "c":
                         // reset
@@ -157,6 +171,8 @@ class CalculadoraGrafica  {
                         result=getResult();
                         resetVars();
                     }
+
+
         }});
         window.add(button);
     }
@@ -184,8 +200,12 @@ class CalculadoraGrafica  {
             case "/":
                 result=operand1/operand2;
                 break;
+            case "\u221a":
+                result=Math.sqrt(operand2);
+                break;
             }
-            operation.setText(operand1+" "+operator+" "+operand2+" =");
+
+            operation.setText(getFormatedDecimal(operand1)+" "+operator+" "+getFormatedDecimal(operand2)+" =");
             display.setText(getFormatedDecimal(result));
             resetVars();
             decimalDot=true;

@@ -1,0 +1,49 @@
+// SQLITE 3
+
+//  crear una table
+
+CREATE TABLE datos_alumnos (
+  legajo    int(7)      NOT NULL,
+  nombre    varchar(40) NOT NULL,
+  apellido  varchar(40) NOT NULL,
+  comision  varchar(40) NOT NULL,
+  email     varchar(60) NOT NULL
+);
+
+
+// consulta sencilla
+SELECT apellido,legajo FROM datos_alumnos;
+
+// consulta filtrada y ordenada
+SELECT * FROM datos_alumnos WHERE comision=22585 ORDER BY comision;
+
+// conector logico AND
+SELECT * FROM datos_alumnos WHERE legajo>2000000 AND legajo<3000000;
+
+// conector logico OR
+SELECT * FROM datos_alumnos WHERE comision=22585 OR comision=22586;
+
+// uso del LIKE , matching de todo lo que empieza con M
+SELECT * FROM datos_alumnos WHERE apellido LIKE "M%" ORDER BY apellido;
+
+// uso del LIKE , matching de todo lo que termina con s
+SELECT * FROM datos_alumnos WHERE apellido LIKE "%s" ORDER BY apellido;
+
+// quitar repetidos
+SELECT * FROM datos_alumnos WHERE comision=22585 GROUP BY comision;
+
+// limitar cantidad de resultados
+SELECT apellido,legajo FROM datos_alumnos LIMIT 10;
+
+// eliminar un dato
+DELETE FROM datos_alumnos WHERE datos_alumnos.legajo=1033611;
+
+// eliminar tabla !!!
+// DROP datos_alumnos ;
+
+// UPDATE
+UPDATE datos_alumnos WHERE legajo=3785930 SET nombre = "ANDREA CARLA";
+
+// ALTER
+ALTER TABLE datos_alumnos ADD localidad TEXT;
+ALTER TABLE datos_alumnos RENAME localidad TO provincia;
