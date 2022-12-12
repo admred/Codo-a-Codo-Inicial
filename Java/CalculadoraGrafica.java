@@ -105,6 +105,7 @@ class CalculadoraGrafica  {
             @Override
             public void actionPerformed(ActionEvent event){
 
+
                 switch(text){
                     case "0":
                     case "1":
@@ -116,51 +117,59 @@ class CalculadoraGrafica  {
                     case "8":
                     case "7":
                     case "9":
-                        if(newOperand == true){
-                            if(!text.equals("0")){
+                        if( newOperand ) {
+                            if( !text.equals("0") || !display.getText().equals("0") ) {
                                 display.setText(text);
-                                newOperand=false;
+                                newOperand=false; // primer numero
                             }
                         } else {
-                            display.setText(display.getText()+text);
+                            display.setText(display.getText()+text);   // segundo numero
                         }
                         break;
                     case ".":
-                        if(decimalDot == false) {
-                            display.setText(display.getText()+text);
+                        if( !decimalDot ) {
+                            if( display.getText().equals("0")) {
+                                display.setText(display.getText()+text);
+                                newOperand=false;
+                                decimalDot=true;
+                            }
                         } else {
-
                             display.setText("0"+text);
                         }
-                        decimalDot=true;
-                        newOperand=false;
-                        break;
 
+                        break;
                     case "+":
                     case "-":
                     case "*":
                     case "/":
-
                         if(operator.equals("") ) {
                             operator=text;
                             operand1=Double.parseDouble(display.getText());
                             newOperand=true;
+                            decimalDot=false;
                             operation.setText(getFormatedDecimal(operand1)+" "+operator);
                         } else {
                             operand1=getResult();
+                            decimalDot=false;
                             operator=text;
+                            //operation.setText(getFormatedDecimal(operand1)+" "+operator+" "+display.getText());
                         }
-                        decimalDot=false;
+
                         //operation.setText(getFormatedDecimal(operand1)+" "+operator);
                         break;
 
-                    case "\u221a":
-                        if(operand2>=0){
-                            operand1=getResult();
-                            operation.setText(operator+"("+getFormatedDecimal(operand1)+")");
-                        }
+                    case "\u221a":  // sqrt
 
+                        resetVars();
+                        operand1=Double.parseDouble(display.getText());
+                        operation.setText("\u221a"+getFormatedDecimal(operand1)+" = ");
+                        operand1=Math.sqrt(operand1);
+                        display.setText(getFormatedDecimal(operand1));
+                        newOperand=true;
+                        decimalDot=false;
+                        //System.out.printf("crearBoton(): operand1 = %s , operand2 = %s , result = %s , newOperand = %s , operator = %s, decimalDot = %s\n",operand1,operand2,result,newOperand,operator,decimalDot);
                         break;
+
                     case "c":
                         // reset
                         display.setText("0");
@@ -168,11 +177,26 @@ class CalculadoraGrafica  {
                         resetVars();
                         break;
                     case "=":
-                        result=getResult();
-                        resetVars();
+                        if(!operator.equals("0")){
+                            getResult();
+                        }
+                        break;
+                    case "\u2190":  // <-
+                        String val=display.getText();
+                        if( val.length() > 1 ) {
+                            display.setText(val.substring(0,val.length()-1));
+                        } else {
+                            display.setText("0");
+                            newOperand=true;
+                        }
+                        if(val.contains(".")){
+                            decimalDot=true;
+                        } else {
+                            decimalDot=false;
+                        }
+                        break;
+
                     }
-
-
         }});
         window.add(button);
     }
@@ -200,15 +224,14 @@ class CalculadoraGrafica  {
             case "/":
                 result=operand1/operand2;
                 break;
-            case "\u221a":
-                result=Math.sqrt(operand2);
-                break;
             }
-
-            operation.setText(getFormatedDecimal(operand1)+" "+operator+" "+getFormatedDecimal(operand2)+" =");
+            //operation.setText(operation.getText()+" = ");
+            operation.setText(getFormatedDecimal(operand1) + " " + operator + " " + getFormatedDecimal(operand2) + " =");
             display.setText(getFormatedDecimal(result));
+
+            //System.out.printf("getResult(): operand1 = %s , operand2 = %s , result = %s , newOperand = %s , operator = %s, decimalDot = %s\n",operand1,operand2,result,newOperand,operator,decimalDot);
+
             resetVars();
-            decimalDot=true;
             return result;
         }
 
@@ -216,7 +239,7 @@ class CalculadoraGrafica  {
         String valueDisplay="";
         DecimalFormatSymbols separator=new DecimalFormatSymbols();
         separator.setDecimalSeparator('.');
-        DecimalFormat format=new DecimalFormat("#.###########");
+        DecimalFormat format=new DecimalFormat("#.###########",separator);
         valueDisplay= String.valueOf(format.format(decimal));
         return valueDisplay;
     }

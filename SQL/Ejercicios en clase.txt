@@ -1,4 +1,4 @@
-// SQLITE 3
+
 
 //  crear una table
 
